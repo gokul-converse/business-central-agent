@@ -13,9 +13,10 @@ class BcAuth:
             client_secret=settings.bc_client_secret,
         )
 
-    def get_access_token(self) -> str:
+    def get_access_token(self, force_refresh:bool = False) -> str:
         token = self.credential.get_token(
-            "https://api.businesscentral.dynamics.com/.default"
+            "https://api.businesscentral.dynamics.com/.default",
+            force_refresh=force_refresh
         )
 
         # print(token)

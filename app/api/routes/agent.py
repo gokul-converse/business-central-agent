@@ -59,6 +59,44 @@ async def chat(request: ChatRequest):
         session=session
     )
 
+    approval_required = bool(response.user_input_requests)
+
+    approval_requests = []
+
+    if response.user_input_requests:
+        for request_item in response.user_input_requests:
+
+            approval_requests.append({
+                "request_id": request_item.id,
+                "request_type": request_item.type,
+            })
+
+    # print("\n========== RESPONSE TYPE ==========")
+    # print(type(response))
+
+    # print("\n========== RESPONSE ATTRIBUTES ==========")
+    # print(dir(response))
+
+    # print("\n========== RESPONSE DATA ==========")
+    # print(vars(response))
+
+    # print("\n========== USER INPUT REQUESTS ==========")
+    # print(response.user_input_requests)
+    # print(type(response.user_input_requests))
+
+    # if response.user_input_requests:
+    #     for request_item in response.user_input_requests:
+    #         print("\nREQUEST ITEM:")
+    #         print(request_item)
+    #         print(type(request_item))
+    #         print(dir(request_item))
+    #         print(vars(request_item))
+
+    # return {
+    #     "session_id": request.session_id,
+    #     "response": response.text,
+    # }
+
     # print("\n========== CURRENT RESPONSE ==========")         -----> DEBUGGING PURPOSES
 
     # for index, message in enumerate(response.messages):
@@ -103,10 +141,11 @@ async def chat(request: ChatRequest):
 
         # 8. Return response to frontend
         return {
-            "session_id": request.session_id,
-            "response": response.text
-        }
-
+        "session_id": request.session_id,
+        "response": response.text,
+        "approval_required": approval_required,
+        "approval_requests": approval_requests,
+    }
 
 '''
 Final mental model
