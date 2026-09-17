@@ -1,5 +1,5 @@
 from agent_framework import tool
-
+from app.exceptions.bc_exceptions import BusinessCentralAPIError
 from app.models.customer import CustomerUpdateRequest
 from app.services.customer_service import CustomerService
 from typing import Annotated
@@ -30,9 +30,31 @@ def update_customer(
         country=country,
     )
 
-    customer = customer_service.update_customer(request)
+    try:
+        result = customer_service.update_customer(request)
 
-    return{
-        "status": "updated",
-        "customer": customer
-    }
+        return result
+
+    except BusinessCentralAPIError as exc:
+        return {
+            "status": "error",
+            "message": exc.message,
+            "error_code": exc.error_code,
+            "status_code": exc.status_code,
+        }
+
+    except ValueError as exc:
+        return {
+            "status": "invalid_input",
+            "message": str(exc),
+        }
+
+    except Exception:
+        return {
+            "status": "error",
+            "message": (
+                "An unexpected error occurred while "
+                "updating the customer."
+            ),
+            "error_code": "UnexpectedError",
+        }

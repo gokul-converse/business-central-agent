@@ -78,18 +78,18 @@ class CustomerService:
             next_url = response.get("@odata.nextLink")
 
 
-            customer_models = [
-                    Customer(
-                        id=customer["id"],
-                        number=customer["number"],
-                        name=customer["displayName"],
-                        phone=customer.get("phoneNumber"),
-                        email=customer.get("email"),
-                        city=customer.get("city"),
-                        country=customer.get("country"),
-                    )
-                    for customer in all_customers
-                ]
+        customer_models = [
+                Customer(
+                    id=customer["id"],
+                    number=customer["number"],
+                    name=customer["displayName"],
+                    phone=customer.get("phoneNumber"),
+                    email=customer.get("email"),
+                    city=customer.get("city"),
+                    country=customer.get("country"),
+                )
+                for customer in all_customers
+            ]
 
         if not customer_models:
             return {

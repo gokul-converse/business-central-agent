@@ -1,6 +1,6 @@
 from agent_framework import tool
 from app.services.customer_service import CustomerService
-
+from app.exceptions.bc_exceptions import BusinessCentralAPIError
 from typing import Annotated
 
 customer_service = CustomerService()
@@ -41,10 +41,37 @@ def search_customers(
     phone number, or email address.
     """
 
-    return customer_service.search_customers(
-        name=name,
-        number=number,
-        phone=phone,
-        email=email,
-        top=top,
-    )
+    try:
+        result = customer_service.search_customers(
+            name=name,
+            number=number,
+            phone=phone,
+            email=email,
+            top=top,
+        )
+
+        return result
+
+    except BusinessCentralAPIError as exc:
+        return {
+            "status": "error",
+            "message": exc.message,
+            "error_code": exc.error_code,
+            "status_code": exc.status_code,
+        }
+
+    except ValueError as exc:
+        return {
+            "status": "invalid_input",
+            "message": str(exc),
+        }
+
+    except Exception:
+        return {
+            "status": "error",
+            "message": (
+                "An unexpected error occurred while "
+                "searching customers."
+            ),
+            "error_code": "UnexpectedError",
+        }

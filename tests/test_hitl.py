@@ -11,7 +11,7 @@ async def main():
 
     # 2. Ask the agent to delete a customer
     response = await agent.run(
-        "delete the customer who has email - ferrow@gmail.com",
+        "Delete the customer with customer number C00220",
         session=session,
     )
 
